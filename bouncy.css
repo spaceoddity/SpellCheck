@@ -1,0 +1,224 @@
+body {
+	margin: 0px;
+}
+
+#viewport {
+	background-color: rgb(63,63,63);	
+	position: relative;
+	overflow: hidden;
+	font-family: Arial,sans-serif;	
+	font-size: 18px;
+	color: white;
+}
+
+/* changing jquery ui theme */
+.ui-button .ui-button-text {
+	font-size: 18px;
+}
+.ui-tabs .ui-tabs-nav li a {
+	font-size: 18px;
+}
+/*--------------------------*/
+
+.column_center {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.row_center {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.hidden {
+	display: none;
+}
+
+.space-between {
+	display: flex;
+	justify-content: space-between; 
+}
+
+.bg_canvas {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.rounded {
+	border-radius: 5px;
+}
+
+.marginned {
+	margin: 10px;
+}
+
+.padded {
+	padding: 10px;
+}
+
+.floating_bg {
+	z-index: 1;
+	background: rgba(255,255,255,0.25);
+}
+
+/* Options Menu */
+#options_container {
+	z-index: 1;
+}
+
+#vergence {
+	border: 1px solid rgba(255,255,255, 0.25);
+	padding: 6px 6px 0px 6px;
+}
+
+.options_border {
+	border: 1px solid rgba(255,255,255, 0.25);
+	padding: 6px;
+}
+
+.options_radio div {
+	display: inline-block;
+}
+
+#palette_radio label span, #bounce_radio label span {
+	padding: 0.4em 0.6em 0.2em 0.6em;
+}
+
+.rb_button {
+  height: 41px;
+  width: 41px;
+  background-image: linear-gradient(
+						to top right, 
+						rgb(255,0,0), 
+						rgb(0, 0, 0), 
+						rgb(0,0,255)
+    );
+}
+
+.pt_button {
+  height: 41px;
+  width: 41px;
+  background-image: linear-gradient(
+						to top right, 
+						rgb(127,0,127), 
+						rgb(127, 127, 127), 
+						rgb(0,127,127)
+    );
+}
+
+.rg_button {
+  height: 41px;
+  width: 41px;
+  background-image: linear-gradient(
+						to top right, 
+						rgb(255,0,0), 
+						rgb(255, 127, 0), 
+						rgb(0,127,0)
+    );
+}
+
+.options_spinner {
+	padding-left: 15px;
+}
+
+.big_spin {
+	width: 80px;
+}
+
+.small_spin {
+	width: 50px;
+}
+
+.options_width {
+	width: 550px;
+}
+
+#options_buttons {
+	display: flex;
+	justify-content: flex-end;
+}
+
+#options_buttons button {
+	margin-left: 6px;
+	margin-top: 6px;
+}
+
+/*------------------------------------------------------------*/
+#cal_dialog {
+	background: rgb(64,64,64);
+	padding: 12px 15px 10px 15px;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+.ui-dialog .ui-dialog-title {
+	font-size: 18px;
+	margin: 0px;
+}
+
+#cal_dialog > div {
+	background: rgb(64,64,64);
+	color: white;
+	font-family: Arial,sans-serif;	
+	font-size: 18px;
+}
+
+#cal_dialog canvas {
+	margin-bottom: 9px;
+}
+
+#calib_slider {
+	width: 406px;
+	margin-top: 5px;
+}
+
+#cal_dialog > div > div:nth-child(1) {
+	margin-bottom: 12px;
+}
+
+#cal_dialog > div > div:nth-child(2){
+	margin-bottom: 20px;
+}
+
+/*------------------------------------------------------------*/
+
+#countdown {
+	position: fixed;
+	top: 0;
+	right: 0;
+	font-size: 32px;
+	padding: 18px;
+	color: rgba(255,255,255,0.5)
+}
+
+#pause_buttons {
+	display: flex;
+	justify-content: flex-end;
+}
+
+#pause_buttons button {
+	margin-top: 6px;
+	margin-left: 6px;
+}
+
+.pause_padding {
+	padding: 6px;
+}
+
+.hexagon {
+  fill: none;
+  stroke: gray;
+  stroke-width: .5px;
+}
+
+.hexgraph {
+	background: white;
+}

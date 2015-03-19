@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="jquery-1.11.2.js."></script>
+	</head>
+	<body>
+		<style>
+		
+		body {
+			margin: 0px;
+		}
+		
+		#mycanvas {
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			background: red;
+		}
+		
+		#mydiv {
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		</style>
+		
+		<div id="mycanvas"></canvas>
+		<div id="mydiv">
+			<p>Hello I am a cute paragraph</p>
+			<p>I am a cuter paragraph</p>
+		</div>
+		<script>
+			$(document).ready(function(){
+				
+				var width = $(window).width();
+				var height = $(window).height();
+				
+				$("#mycanvas").width(width);
+				$("#mycanvas").height(height);
+				
+				$("#mydiv").width(width);
+				$("#mydiv").height(height);
+				
+			});
+		</script>
+	</body>
+</html>

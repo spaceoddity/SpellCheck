@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.hexagon {
+  fill: none;
+  stroke: #000;
+  stroke-width: .5px;
+}
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.hexbin.v0.min.js?5c6e4f0"></script>
+<script>
+
+var graph_width = 300;
+var graph_height = 300;
+
+var data_width = 600;
+var data_height = 600;
+
+var randomX = d3.random.normal(data_width / 2, 80),
+	randomY = d3.random.normal(data_height / 2, 80),
+	points = d3.range(2000).map(function() { return [x(randomX()), y(randomY())]; });
+
+var color = d3.scale.linear()
+	.domain([0, 20])
+	.range(["white", "steelblue"])
+	.interpolate(d3.interpolateLab);
+
+var hexbin = d3.hexbin()
+	.size([graph_width, graph_height])
+	.radius(20);
+
+var x = d3.scale.linear()
+	.domain([0, data_width])
+	.range([0, graph_width]);
+
+var y = d3.scale.linear()
+	.domain([0, data_height])
+	.range([0, graph_height]);
+	
+var svg = d3.select("body").append("svg")
+	.attr("width", graph_width)
+	.attr("height", graph_height)
+  .append("g");
+
+svg.append("clipPath")
+	.attr("id", "clip")
+  .append("rect")
+	.attr("class", "mesh")
+	.attr("width", graph_width)
+	.attr("height", graph_height);
+
+svg.append("g")
+	.attr("clip-path", "url(#clip)")
+  .selectAll(".hexagon")
+	.data(hexbin(points))
+  .enter().append("path")
+	.attr("class", "hexagon")
+	.attr("d", hexbin.hexagon())
+	.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+	.style("fill", function(d) { return color(d.length); });	
+</script>
+</body>

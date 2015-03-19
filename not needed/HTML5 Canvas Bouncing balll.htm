@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html><head>
+<title>HTML5 Canvas Bouncing ball</title>
+<script type="text/javascript">
+
+
+	var base_speed = 5;
+    var ctx;
+    // starting coordinates
+	var r = 15;    
+	var x = 300;
+    var y = 300;
+    // amount moved in x,y direction
+    var mx = base_speed;  
+    var my = base_speed;
+    // values below are set when page has loaded. 
+    // They cannot be set here
+    var width; 
+    var height; 
+ 
+function circle(x,y,r) 
+{
+  //x,y coordinates of centre, radius r 
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI*2, true);
+  ctx.fillStyle = "#f80";
+  ctx.fill();
+}
+ 
+function clear() 
+{
+  //clear the screen
+  ctx.clearRect(0, 0, width, height);
+}
+
+function init() 
+{
+  var canvas = document.getElementById("myCanvas");
+  ctx = canvas.getContext("2d");
+  height = canvas.height;
+  width = canvas.width;
+  setInterval(draw, 1000.0/60.0);
+}
+ 
+function draw() 
+{
+  clear();         //after every animation frame
+  circle(x, y, r);
+  // check for collision with the walls and if true
+  // reverse direction
+
+	if (x + r  > width || x - r  < 0 ) {
+		mx = (mx > 0) ? -base_speed : base_speed;
+		my = (Math.random >= 0.5) ? -Math.random()*base_speed : Math.random()*base_speed;
+	}
+	if (y + r > height || y - r < 0) {
+		my = (my > 0) ? -base_speed : base_speed;
+		mx = (Math.random() >= 0.5) ? -Math.random()*base_speed : Math.random()*base_speed;
+	}
+  
+  
+//  if (x + mx + r  > width || x + mx - r  < 0 )
+//    mx = -mx;
+//  if (y + my + r > height || y + my - r < 0)
+//    my = -my;
+  //increment x and y positions
+  x += mx;
+  y += my;
+ 
+}
+ 
+window.onload = init;
+</script>               
+</head>
+<body>
+<canvas id="myCanvas" width="600" height="600" style="border:1px solid black;">
+   <!-- Insert fallback content here -->
+   Your browser doesn't support canvas technology
+</canvas>
+
+</body></html>
