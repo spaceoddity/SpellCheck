@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<style>
-</style>
-<body>
-<script>
-var S = {
+var THING = {
 	defaults : {},
 	
 	storage_get : function(key) {
@@ -20,27 +15,24 @@ var S = {
 		self = this;
 		for (i in args) {
 			this.defaults[i] = args[i];
-			(function(i){
-				Object.defineProperty(self, i, {
-					configurable : true,
-					get: function () {
-						return self.storage_get(i);
-					},
-					set: function (value) {
-						self.storage_set(i,value);
-					},
-				});
-			})(i);
+			
+			Object.defineProperty(this, i, {get: function () {
+				self.storage_get(i);
+			}});
+			
+			Object.defineProperty(this, i, {set: function (value) {
+				self.storage_set(i,value);
+			}});
 		}
 		this.validate_storage();
 	},
 	
 	validate_storage : function(){
-		for (i in this.defaults) {
+		for (i in defaults) {
 			if (typeof(window.localStorage[i]) === 'undefined' || window.localStorage[i] === null) {
 			window.localStorage.clear();		
-				for (i in this.defaults) {
-					this.storage_set(i,this.defaults[i]);
+				for (i in defaults) {
+					storage.set(i,defaults[i]);
 				}
 				return;
 			}
@@ -48,7 +40,7 @@ var S = {
 	},
 };
 
-S.set_defaults({
+THING.set_defaults({
 	TICKS : 75,
 	GRAY : [127,127,127],
 	BLUE : [0,0,255],
@@ -74,6 +66,7 @@ S.set_defaults({
 	ORB_SEPARATION : 0,
 	ORB_SCALE : 7,
 	ORB_SPEED : 0, //pixels per second
+	//ORB_BOUNCE : ORB_BOUNCE_VALUES.NORMAL, //THIS DOESN'T WORK NOW
 	PALETTE : "purpteal",  // purpteal, redblue, redgreen
 	PURPLE : [132,0,132],
 	TEAL : [0,129,129],
@@ -81,10 +74,4 @@ S.set_defaults({
 	BLACK : [0,0,0],
 });
 
-S.set_defaults({ORB_BOUNCE : S.ORB_BOUNCE_VALUES.NORMAL});
-
-console.log(S.GREEN);
-console.log(window.localStorage);
-
-</script>
-</body>
+console.log(THING.defaults);

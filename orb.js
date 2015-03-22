@@ -1,48 +1,61 @@
-orb = {};
-orb.Orb = function(center_x, center_y){
-	//starting coordinates
-	this.center_x = center_x;
-	this.center_y = center_y;
+var Orb = {
+	init : function(center_x, center_y){
+		//starting coordinates
+		this.center_x = center_x;
+		this.center_y = center_y;
 
-	//set initial orb properties according to settings
-	this.speed = ORB_SPEED;
-	this.bounce_ratio = ORB_BOUNCE;
-	this.separation = ORB_SEPARATION;
-	this.scale = ORB_SCALE;
-	this.outer_line_width = this.scale * ORB_LINE_WIDTH;
-	this.font = "bold " + ORB_FONT_SIZE*this.scale+"px " + ORB_FONT;
-	var cnvs = document.createElement("canvas");
-	var ctx = cnvs.getContext("2d");
-	ctx.font = this.font;
-	this.outer_width = ctx.measureText("12345678").width;
-	
-	this.rotation_counter = 0;
-	
-	this.underline_position = 0;
-	
-	//variables for movement
-	this.x_dir = 1;
-	this.y_dir = 1;
-	
-	//variables to store answers and guesses
-	this.answer = "";
-	this.correct_guesses = [];
-	this.incorrect_guesses = [];
-	
-	//variables for wrong answer shake effect
-	this.x_offset = 0;
-	this.shaking = false;
-	
-	//variables for correct answer pulsate effect
-	this.extra_thickness = 0;
-	this.pulsating = false;
-	
-	//create functions that use closures
-	this.shake = this.shake();
-	this.pulsate = this.pulsate();	
-};
+		//set initial orb properties according to settings
+		this.speed = ORB_SPEED;
+		this.bounce_ratio = ORB_BOUNCE;
+		this.separation = ORB_SEPARATION;
+		this.scale = ORB_SCALE;
+		this.outer_line_width = this.scale * ORB_LINE_WIDTH;
+		this.font = "bold " + ORB_FONT_SIZE*this.scale+"px " + ORB_FONT;
+		var cnvs = document.createElement("canvas");
+		var ctx = cnvs.getContext("2d");
+		ctx.font = this.font;
+		this.outer_width = ctx.measureText("12345678").width;
+		this.hex_points = this.calculate_hex_points();	
+		
+		this.rotation_counter = 0;
+		
+		this.underline_position = 0;
+		
+		//variables for movement
+		this.x_dir = 1;
+		this.y_dir = 1;
+		
+		//variables to store answers and guesses
+		this.answer = "";
+		this.correct_guesses = [];
+		this.incorrect_guesses = [];
+		
+		//variables for wrong answer shake effect
+		this.x_offset = 0;
+		this.shaking = false;
+		
+		//variables for correct answer pulsate effect
+		this.extra_thickness = 0;
+		this.pulsating = false;
+		
+		//create functions that use closures
+		this.shake = this.shake();
+		this.pulsate = this.pulsate();
 
-orb.Orb.prototype = {	
+		return this;
+	},
+	
+	calculate_hex_points : function(){
+		var size = this.outer_width/2; 
+ 		var sides = 6;		
+		var points = [];
+		
+		points.push([0 + size * Math.cos(0), 0 +  size *  Math.sin(0)]);          
+		for (var i = 1; i < sides;i += 1) {
+			points.push([0 + size * Math.cos(i * 2 * Math.PI / sides), 0 + size * Math.sin(i * 2 * Math.PI / sides)]);
+		}
+		return points;
+	},
 
 	pulsate : function() {
 		var total = 0;
@@ -123,7 +136,7 @@ orb.Orb.prototype = {
 		var letter_width = ctx.measureText("m").width;
 		var letter_height = ctx.measureText("m").width;		
 		var word_width = ctx.measureText(this.word[0]).width;
-		var word_length = this.word[0].length;		
+		var word_length = this.word[0].length;
 		var underline = letter_width * this.underline_position;
 		
 		var x = (this.center_x - word_width/2 + underline) + polarity*(this.separation/2) + this.x_offset;
@@ -137,21 +150,20 @@ orb.Orb.prototype = {
 	draw_outer_hex : function(ctx, color, polarity){
 		ctx.strokeStyle = color;
 		ctx.lineWidth = this.outer_line_width + this.extra_thickness;
-
-		var size = this.outer_width/2; 
+ 
 		var x = this.center_x + polarity*(this.separation/2) + this.x_offset; 
 		var y = this.center_y;
 		var rotation = this.rotation_counter * Math.PI/180;
- 		var sides = 6;
+		var points = this.hex_points;
 		
 		ctx.save();
 		ctx.translate(x,y);
 		ctx.rotate(rotation);
 		ctx.beginPath();		
-		ctx.moveTo (0 + size * Math.cos(0), 0 +  size *  Math.sin(0));          
-		for (var i = 1; i < sides;i += 1) {
-			ctx.lineTo (0 + size * Math.cos(i * 2 * Math.PI / sides), 0 + size * Math.sin(i * 2 * Math.PI / sides));
-		}
+		ctx.moveTo(points[0][0], points[0][1]);          
+		for (i=1; i<points.length; i++) {
+			ctx.lineTo(points[i][0], points[i][1]);
+		}		
 		ctx.closePath();		
 		ctx.stroke();
 		ctx.restore();
@@ -190,6 +202,7 @@ orb.Orb.prototype = {
 						this[key] = options[key];
 						this.font = "bold " + ORB_FONT_SIZE*this.scale+"px " + ORB_FONT;
 						this.outer_line_width = this.scale * ORB_LINE_WIDTH;
+						this.hex_points = this.calculate_hex_points();
 						break;					
 				}
 			}
@@ -202,6 +215,10 @@ orb.Orb.prototype = {
 		this.rotation_counter += ORB_ROTATION_SPEED/TICKS;
 		if (this.rotation_counter >= 360) {
 			this.rotation_counter -= 360;
+		}
+		
+		if (this.underline_position > this.word[0].length-1) {
+			this.underline_position = this.word[0].length-1;
 		}
 		
 		this.move();
@@ -231,10 +248,6 @@ orb.Orb.prototype = {
 	move : function() {
 		this.center_x += this.speed_x/TICKS;
 		this.center_y += this.speed_y/TICKS;
-		this.iris_x += this.speed_x/TICKS;
-		this.iris_y += this.speed_y/TICKS;
-		//this.pupil_x += this.speed_x/TICKS;
-		//this.pupil_y += this.speed_y/TICKS;
 	},	
 
 	new_answer : function() {	
@@ -245,27 +258,15 @@ orb.Orb.prototype = {
 	},
 	
 	set_xy : function(new_x, new_y) {
-		var old_x = this.center_x;
-		var old_y = this.center_y;
-		
-		var difference_x = new_x - old_x;
-		var difference_y = new_y - old_y;
-		
 		this.center_x = new_x;
 		this.center_y = new_y;
-		
-		this.iris_x += difference_x;
-		this.iris_y += difference_y;
-		
-		this.pupil_x += difference_x;
-		this.pupil_y += difference_y;
 	},
 	
 	check_input : function(input) {
 		//if not currently shaking or pulsating, check answers
 		if (!this.shaking && !this.pulsating) {
 			if (input === "up" || input === "down") {
-				if ((this.answer === "living" && input === "up") || (this.answer === "not_living" && input === "down")) {
+				if ((this.answer === "spelled" && input === "up") || (this.answer === "misspelled" && input === "down")) {
 					this.correct_guesses.push([this.center_x, this.center_y]);
 					this.pulsate();
 				} else {
@@ -286,29 +287,35 @@ orb.Orb.prototype = {
 				}
 			}
 		}
-	},
-	
-//TODO: add sounds
-//TODO: comment code
+	},	
 };
 
-Word = {
+var Word = {
 	new_word : function(){
-		var word;
+		var word = this.words[utilities.randInt(0,this.words.length-1)];
 		var answer;
-		
 		if (utilities.randInt(1,100) > 50) {
-			answer = "living";
-			word = this.living[utilities.randInt(0,this.living.length-1)];
-			word = this.split(word);
+			answer = "spelled";
 		} else {
-			answer = "not_living";
-			word = this.not_living[utilities.randInt(0,this.not_living.length-1)]
-			word = this.split(word);			
-			return ["not_living", word[0], word[1]];
-		}
-		
+			answer = "misspelled";
+			word = this.transpose(word);
+		}		
+		word = this.split(word);
 		return [answer, word[0], word[1]];
+	},
+
+	transpose : function(word){
+		var start;
+		var new_word = word;
+		
+		do {
+			start = utilities.randInt(0,word.length-2);
+		} while (word[start] === word[start+1]);
+		
+		new_word = utilities.replaceAt(new_word, start, word[start+1]);
+		new_word = utilities.replaceAt(new_word, start+1, word[start]);
+		
+		return new_word;
 	},
 	
 	split : function(word){
@@ -342,30 +349,18 @@ Word = {
 		return split_word;
 	},
 	
-	living : [
+	words : [
 		"staple", "zebra",  "donkey", "shrimp", "turkey", "tiger",  "horse",  "roach",  "sailor", "monkey", "rabbit", "eagle",
 		"beaver", "animal", "woman",  "skunk",  "waiter", "kitten", "shark",  "snake",  "birds",  "daisy",  "people", "bushes",
 		"priest", "whale",  "lizard", "goose",  "snail",  "grass",  "child",  "actor",  "writer", "puppy",  "human",  "parrot",
 		"squid",  "trees",  "doggy",  "doctor", "goats",  "sheep",  "mouse",  "rhino",  "lions",  "bears",  "farmer", "parent",
-		"worms",  "ducks",  "wolves", "walrus", "insect", "beetle", "author", "judge",  "singer", "uncle",  "turtle", "frogs",
-		"panda",  "moose",  "oyster", "poodle", "baker",  "lawyer", "jaguar", "crabs",  "koala",  "llama",  "gopher", "clams",
+		"worms",  "ducks",  "wolves", "walrus", "insect", "beetle", "author", "judge",            "uncle",  "turtle", "frogs",
+		"panda",  "moose",  "oyster", "poodle", "baker",  "lawyer", "jaguar",           "koala",  "llama",  "gopher", "clams",
 		"barber", "nurse",  "gerbil", "falcon", "toads",  "cattle", "hyena",  "bobcat", "coach",  "pirate", "dancer", "hornet",
 		"spider", "baboon", "badger", "coyote", "camel",  "bunny",  "police", "pillow", "table",  "towel",  "shoes",  "knife", 
-		"music",  "phone",  "paper",  "couch",  "socks",  "plate",  "radio",  "clock",  "pencil", "teapot", "shirt",  "napkin",
-		//"butter", "chair",  "candle", "hammer", "pants",  "water",  "cookie", "bottle", "truck",  "string", "spoon",  "boats",
-		//"cream",  "staple", "school", "sphere", "jacket", "steam",  "fridge", "cycle",  "ticket", "burger", "future", "house",
-		//"doors",  "glove",  "bagel",  "chalk",  "cloud",  "wallet", "toilet", "silver", "pizza",  "honey",  "games",  "tomato",
-	],
-	
-	not_living : [
-		"stalpe", "zerba",  "doneky", "shirmp", "tukrey", "tigre",  "hosre",  "raoch",  "salior", "moneky", "raibbt", "eagel",
-		"baever", "aminal", "wamon",  "skukn",  "watier", "kittne", "shakr",  "snaek",  "brids",  "daysi",  "poeple", "busehs",
-		"priets", "whael",  "lazird", "goeso",  "snial",  "grasa",  "chlid",  "acotr",  "wrietr", "pyppu",  "hunam",  "parort",
-		"siqud",  "trese",  "dogyg",  "dotcor", "gaots",  "shepe",  "muose",  "rhoni",  "liosn",  "baers",  "famrer", "parnte",
-		"worsm",  "dukcs",  "wolevs", "wulras", "inscet", "betele", "autohr", "jedgu",  "sinegr", "uncel",  "turtel", "frosg",
-		"padna",  "moeso",  "oyestr", "poodel", "bakre",  "laywer", "jagaur", "crasb",  "kaola",  "lalma",  "gopehr", "clasm",
-		"berbar", "nusre",  "gebril", "faclon", "toasd",  "catlte", "heyna",  "boabct", "caoch",  "pairet", "darcen", "honret",
-		"spedir", "boboan", "bagder", "coyeto", "cemal",  "bynnu",  "poilce", "polliw", "talbe",  "towle",  "shose",  "knief",
-		"muisc",  "phoen",  "papre",  "cuoch",  "sokcs",  "palte",  "raido",  "klocc",  "pincel", "tepoat", "shrit",  "nakpin",		
+		"music",  "phone",  "paper",  "couch",  "socks",  "plate",  "radio",  "clock",  "pencil", "teapot",           "napkin",
+		"butter", "chair",  "candle", "hammer", "pants",  "water",  "cookie", "bottle", "truck",  "string", "spoon",
+		"cream",  "staple", "school", "sphere", "jacket", "steam",  "fridge", "cycle",  "ticket", "burger", "future", "house",
+		"doors",  "glove",  "bagel",  "chalk",  "cloud",  "wallet", "toilet", "silver", "pizza",  "honey",  "games",  "tomato",
 	],
 };

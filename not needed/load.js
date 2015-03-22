@@ -1,12 +1,12 @@
 //TODO: load sounds and images
 
-var Load = game_manager.new_scene("load");
+var Load = Scene.new_scene("load");
 
 Load.entered = function() {
 	this.get_html_elements();
 	this.load_menu.css("display","flex");
 	this.expand();
-	game_manager.push_scene("main_menu");
+	Scene.push_scene("main_menu");
 };
 	
 Load.obscuring = function() {

@@ -1,4 +1,4 @@
-var Scene = {
+var scene_manager = {
 	scene_stack : [],
 	scenes : {},
 	ticks : undefined,
@@ -16,7 +16,10 @@ var Scene = {
 		draw : function(){},		
 	},
 	
-	start : function(scene, ticks){	
+	start : function(scene, ticks, callback){	
+		if (callback !== undefined) {
+			callback();
+		}
 		this.ticks = ticks;
 		this.push_scene(scene);
 		setInterval(this.update.bind(this), 1000.0/this.ticks);

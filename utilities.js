@@ -3,7 +3,7 @@
 //TODO: defaults
 var i = 0;
 
-var TICKS = 40;
+var TICKS = 75;
 var GRAY = [127,127,127];
 var BLUE = [0,0,255];
 var ORB_FONT_SIZE = 8;
@@ -15,7 +15,7 @@ var ORB_IRIS_LINE_WIDTH = 3;
 var ORB_PUPIL_WIDTH = 4;
 var ORB_SPEED_STEP = 20;
 var ORB_SCALE_STEP = 15;
-var ORB_ROTATION_SPEED = 90; //degrees per second
+var ORB_ROTATION_SPEED = 45; //degrees per second
 var ORB_BOUNCE_VALUES = {NORMAL: [1,1], HORIZONTAL: [1,0.1], VERTICAL: [0.1,1]};
 var HEX_CORRECT_COLOR = "darkgreen";
 var HEX_INCORRECT_COLOR = "darkred";
@@ -38,7 +38,7 @@ var BLACK = [0,0,0];
 
 var utilities = {};
 
-utilities.randInt = function (min,max) {
+utilities.randInt = function(min,max) {
 	return Math.floor(Math.random()*(max-min+1)+min);
 };
 
@@ -53,6 +53,10 @@ utilities.nearestMultiple = function(number, multiple, method) {
 	}
 };
 
-utilities.RGB = function (color) {
+utilities.RGB = function(color) {
 	return "rgb("+color[0]+","+color[1]+","+color[2]+")";
+};
+
+utilities.replaceAt = function(string, index, character) {
+    return string.substr(0, index) + character + string.substr(index+character.length);
 };

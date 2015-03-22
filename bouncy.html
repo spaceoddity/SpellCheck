@@ -11,12 +11,13 @@
 		<script src="jquery-ui-slider-pips.js"></script>
 		<script src="d3.js"></script>
 		<script src="hexbin.js"></script>
+
+		<script src="scene.js"></script>
+		<script src="storage.js"></script>
+		<script src="game.js"></script>
 		
-		<script src="game.js"></script>		
 		<script src="utilities.js"></script>
-		<script src="load.js"></script>
 		<script src="mainmenu.js"></script>
-		<script src="level.js"></script>
 		<script src="optionsmenu.js"></script>
 		<script src="orb.js"></script>
 		<script src="calibrate.js"></script>
@@ -122,12 +123,7 @@
 		</div>
 		<script>
 			$(document).ready(function(){
-				game_manager.start("load",TICKS, function(){
-					$.widget( "ui.minute_spinner", $.ui.spinner, {
-						_format: function(value) { return value + ' min'; },
-						_parse: function(value) { return parseInt(value); }
-					});				
-				});
+				Game.start();
 			});
 		</script>
 	</body>

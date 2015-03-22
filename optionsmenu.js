@@ -1,8 +1,8 @@
-var OptionsMenu = game_manager.new_scene("options_menu");
+var OptionsMenu = Scene.new_scene("options_menu");
 	
 OptionsMenu.entered = function() {
 	this.get_html_elements();
-	this.orb = new orb.Orb((this.window.width())/2, (this.window.height())/2);
+	this.orb = Object.create(Orb).init(this.window.width()/2, this.window.height()/2);
 	this.orb.new_answer();
 	this.show();		
 	this.bind_events();
@@ -142,7 +142,7 @@ OptionsMenu.get_html_elements = function() {
 OptionsMenu.bind_events = function() {
 	this.body.on('keyup', function(event){
 		if (event.keyCode === 27) {
-			game_manager.pop_scene();
+			Scene.pop_scene();
 		}
 	});
 	
@@ -169,10 +169,10 @@ OptionsMenu.bind_events = function() {
 												 }).bind(this));
 	this.save_button.on("click", (function(){
 		this.save_form();
-		game_manager.pop_scene();
+		Scene.pop_scene();
 	}).bind(this));
 	this.cancel_button.on("click", function(){
-		game_manager.pop_scene();
+		Scene.pop_scene();
 	});		
 };
 	

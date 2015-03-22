@@ -1,4 +1,4 @@
-CalibrateMenu = game_manager.new_scene("calibrate_menu");
+CalibrateMenu = Scene.new_scene("calibrate_menu");
 	
 CalibrateMenu.entered = function(){
 	this.get_html_elements();
@@ -34,17 +34,17 @@ CalibrateMenu.get_html_elements = function(){
 CalibrateMenu.bind_events = function(){
 	this.body.on('keyup', function(event){
 		if (event.keyCode === 27) {
-			game_manager.pop_scene();
+			Scene.pop_scene();
 		}
 	});
 	this.rb_button.on('click', (function(){
-		game_manager.push_scene("calibrate_dialog","rb");
+		Scene.push_scene("calibrate_dialog","rb");
 	}).bind(this));
 	this.pt_button.on('click', (function(){
-		game_manager.push_scene("calibrate_dialog","pt");
+		Scene.push_scene("calibrate_dialog","pt");
 	}).bind(this));
 	this.rg_button.on('click', (function(){
-		game_manager.push_scene("calibrate_dialog","rg");
+		Scene.push_scene("calibrate_dialog","rg");
 	}).bind(this));
 };
 
@@ -57,7 +57,7 @@ CalibrateMenu.release_events = function(){
 
 
 
-CalibrateDialog = game_manager.new_scene("calibrate_dialog");
+CalibrateDialog = Scene.new_scene("calibrate_dialog");
 	
 CalibrateDialog.entered = function(colors){
 	this.state = undefined;
@@ -160,7 +160,7 @@ CalibrateDialog.step_two = function(){
 		step2_result = this.state.step2.fg(this.slider.slider("value"));
 		this.state.step2.save(this.step1_result, step2_result);
 		this.dialog.hide();
-		game_manager.pop_scene();
+		Scene.pop_scene();
 	}).bind(this));	
 };
 

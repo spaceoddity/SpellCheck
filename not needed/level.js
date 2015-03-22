@@ -1,4 +1,4 @@
-var Level = game_manager.new_scene("level");
+var Level = Scene.new_scene("level");
 
 Level.entered = function(){	
 	this.elapsed = 0;
@@ -8,7 +8,7 @@ Level.entered = function(){
 	this.expand();
 	this.context.globalCompositeOperation = this.blendmode;
 	this.level.css("display","flex");
-	this.orb = new orb.Orb((this.window.width())/2, (this.window.height())/2);						   
+	this.orb = Object.create(Orb).init(this.window.width()/2, this.window.height()/2);
 	this.orb.new_answer();
 	this.add_listeners();
 };
@@ -44,21 +44,21 @@ Level.draw = function() {
 };
 
 Level.determine_palette = function(){
-	if (PALETTE === "purpteal") {
+	if (S.PALETTE === "purpteal") {
 		this.blendmode = "multiply";
-		this.color1 = utilities.RGB(PURPLE);
-		this.color2 = utilities.RGB(TEAL);
-		this.background = utilities.RGB(GRAY);
-	} else if (PALETTE === "redblue") {
+		this.color1 = utilities.RGB(S.PURPLE);
+		this.color2 = utilities.RGB(S.TEAL);
+		this.background = utilities.RGB(S.GRAY);
+	} else if (S.PALETTE === "redblue") {
 		this.blendmode = "screen";
-		this.color1 = utilities.RGB(RED);
-		this.color2 = utilities.RGB(BLUE);
-		this.background = utilities.RGB(BLACK);
-	} else if (PALETTE === "redgreen") {
+		this.color1 = utilities.RGB(S.RED);
+		this.color2 = utilities.RGB(S.BLUE);
+		this.background = utilities.RGB(S.BLACK);
+	} else if (S.PALETTE === "redgreen") {
 		this.blendmode = "multiply";
-		this.color1 = utilities.RGB(RED2);
-		this.color2 = utilities.RGB(GREEN);
-		this.background = utilities.RGB(ORANGE);
+		this.color1 = utilities.RGB(S.RED2);
+		this.color2 = utilities.RGB(S.GREEN);
+		this.background = utilities.RGB(S.ORANGE);
 	}	
 };
 
@@ -119,7 +119,7 @@ Level.add_listeners = function(){
 	
 	this.quit_button.on("click", (function(){
 		this.pause.toggle();
-		game_manager.pop_scene();
+		Scene.pop_scene();
 	}).bind(this));
 };
 
@@ -131,12 +131,12 @@ Level.remove_listners = function(){
 
 Level.update_countdown = function(){		
 	this.elapsed += 1;
-	var remaining = (GAME_LENGTH*60) - (this.elapsed/TICKS);
+	var remaining = (S.GAME_LENGTH*60) - (this.elapsed/S.TICKS);
 	var minutes = Math.floor(remaining/60);
 	var seconds = Math.floor(remaining%60);
 	this.countdown.html(minutes + ":" + ("0"+seconds).slice(-2));		
 	
-	if (this.elapsed/TICKS >= GAME_LENGTH*60) {
+	if (this.elapsed/S.TICKS >= S.GAME_LENGTH*60) {
 		this.update_pause();
 		this.pause.show();
 		this.resume_button.button("disable");
@@ -150,10 +150,10 @@ Level.update_pause = function(){
 	this.misses_graph.empty();
 	
 	//create new correct hex graph
-	this.create_hex_graph(HEX_CORRECT_COLOR,"#hits_graph", this.orb.correct_guesses);
+	this.create_hex_graph(S.HEX_CORRECT_COLOR,"#hits_graph", this.orb.correct_guesses);
 	
 	//create new incorrect hex graph
-	this.create_hex_graph(HEX_INCORRECT_COLOR,"#misses_graph", this.orb.incorrect_guesses);
+	this.create_hex_graph(S.HEX_INCORRECT_COLOR,"#misses_graph", this.orb.incorrect_guesses);
 };
 
 Level.create_hex_graph = function(color, id, data){
